@@ -5,6 +5,8 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import config from '../../webpack.dev.config.js';
 
+// import postsRouter from './routes/posts';
+
 const app = express(),
   DIST_DIR = __dirname,
   HTML_FILE = path.join(DIST_DIR, 'index.html'),
@@ -25,6 +27,13 @@ app.get('*', (req, res, next) => {
     res.send(result);
     res.end();
   });
+});
+app.get('/api/v1/todos', (req, res) => {
+  res.status(200).send({
+    success: 'true',
+    message: 'todos retrieved successfully',
+    todos: undefined
+  })
 });
 
 const PORT = process.env.PORT || 8080;
