@@ -18,9 +18,7 @@ const routes = {
 async function router() {
   const content = document.getElementById('content');
   let request = utils.parseUrl();
-  console.log(request);
   let url = '#' + (request.resource ? `/${request.resource}` : '') + (request.name ? `/name` : '') + (request.postName ? `/postname` : '');
-  console.log(url);
   let page = routes[url];
   content.innerHTML = await page.render();
   await page.afterRender();

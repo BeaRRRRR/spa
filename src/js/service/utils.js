@@ -7,7 +7,10 @@ const utils = {
       postName: url[2]
     };
     return parsedUrl;
+  },
+  removeAllWhitespaces: function (str) {
+    str = str.replace(/\s+/g, '');
   }
 };
 
-export default utils
+export default utils;

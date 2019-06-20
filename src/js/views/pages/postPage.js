@@ -1,8 +1,21 @@
+import utils from '../../service/utils';
+
+async function getPost() {
+  let id = utils.parseUrl().postName;
+  const response =await fetch(`/api/v1/posts/${id}`);
+  const json = await response.json();
+  console.log(json);
+  return json;
+}
+
 let postPage = {
   render: async function () {
+    let post = await getPost();
     return `<a href="#">Home</a>
             <a href="#/about">About</a>
-            <h1>This is the post page but there are no posts yet xD</h1>`;
+            <p>Post title : ${post.title}</p>
+            <p>Post author : ${post.author}</p>
+            <p>Post content : ${post.content}</p>`;
   },
   afterRender: async () => {
   }
