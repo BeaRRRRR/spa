@@ -2,15 +2,22 @@ import path from 'path';
 import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
+import passport from 'passport';
+import cookieSession from 'cookie-session';
 import 'babel-polyfill';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import config from '../../webpack.dev.config.js';
 import postRouter from './routes/api/v1/postRouter';
-import googleAuthUtil from './utils/google-auth-util';
+import userRouter from './routes/api/v1/userRouter';
+import settingRouter from './routes/settingRouter';
+import getAutheticatedUserRouter from './routes/util/getAuthenticatedUserRouter';
+import authentication from './routes/authentication';
+import './config/passport-config.js';
 
-const db = mongoose.connect('mongodb://localhost/spa-db',{useNewUrlParser : true});
+const db = mongoose.connect('mongodb://localhost/spa-db', {useNewUrlParser: true});
+
 
 const app = express(),
   DIST_DIR = __dirname,
@@ -23,8 +30,16 @@ app.use(webpackDevMiddleware(compiler, {
 
 app.use(webpackHotMiddleware(compiler));
 
+app.use(cookieSession({
+  maxAge : 24 * 60 * 60 * 1000,
+  keys : ['mykey']
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended : true}));
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/', (req, res, next) => {
   compiler.outputFileSystem.readFile(HTML_FILE, (err, result) => {
@@ -36,14 +51,12 @@ app.get('/', (req, res, next) => {
     res.end();
   });
 });
-app.use('/api/v1/posts',postRouter);
-app.get('/api/v1/googlelogin',(req,res) => {
- res.send(googleAuthUtil.urlGoogle());
-});
-app.get('/googleAuth',(req,res) => {
-  console.log(req.query.code);
-  console.log(googleAuthUtil.getGoogleAccountFromCode(req.query.code));
-});
+
+app.use('/auth/google', authentication);
+app.use('/getAuthenticatedUser',getAutheticatedUserRouter);
+app.use('/profile',settingRouter);
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/posts', postRouter);
 
 const PORT = process.env.PORT || 8080;
 

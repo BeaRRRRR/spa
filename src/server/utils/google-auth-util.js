@@ -7,7 +7,7 @@ import {google} from 'googleapis';
 const googleConfig = {
   clientId: '20263739003-l210171qijqppm4u0a0uc3b1rndfq1gj.apps.googleusercontent.com', // e.g. asdfghjkljhgfdsghjk.apps.googleusercontent.com
   clientSecret: 'yZaL8LVUHh-39VCZbvNq0Ff8', // e.g. _ASDFA%DFASDFASDFASD#FAD-
-  redirect: 'http://localhost:8080/googleAuth', // this must match your google api settings
+  redirect: 'http://localhost:8080/auth/google/callback', // this must match your google api settings
 };
 
 const defaultScope = [

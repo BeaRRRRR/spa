@@ -4,7 +4,6 @@ async function getPost() {
   let id = utils.parseUrl().postName;
   const response =await fetch(`/api/v1/posts/${id}`);
   const json = await response.json();
-  console.log(json);
   return json;
 }
 
