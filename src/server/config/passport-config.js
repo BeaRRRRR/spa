@@ -25,13 +25,16 @@ passport.use(new GoogleStrategy({
         console.log('user is: ', currentUser);
         done(null, currentUser);
       } else {
+        console.log('The picture is ' + profile._json.picture);
+        console.log('The picture  ' + profile.photos[0].value);
         // if not, create user in our db
         new User({
           email : profile._json.email,
           name: profile.displayName,
           username: profile._json.email.substring(0,profile._json.email.indexOf('@')),
+          profileDescription : '',
           googleId: profile.id,
-          thumbnail: profile._json.picture.url
+          avatar : profile._json.picture
         }).save().then((newUser) => {
           console.log('created new user: ', newUser);
           done(null, newUser);

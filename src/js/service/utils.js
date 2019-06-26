@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 const utils = {
   parseUrl: function () {
     let url = window.location.hash.slice(2).split('/');
@@ -10,6 +12,11 @@ const utils = {
   },
   removeAllWhitespaces: function (str) {
     str = str.replace(/\s+/g, '');
+  },
+
+  getAuthenticatedUser: async function () {
+    const response = await $.get('/getAuthenticatedUser');
+    return response;
   }
 };
 

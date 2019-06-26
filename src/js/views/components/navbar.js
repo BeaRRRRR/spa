@@ -1,29 +1,30 @@
-const getAuthenticatedUser = async () => {
-  const response = await fetch('/getAuthenticatedUser');
-  const json = await response.json();
-  console.log(json);
-  return json;
-};
+import utils from './../../service/utils'
 
-let navbar = {
+
+const navbar = {
   render: async function () {
-    let user = await getAuthenticatedUser();
-    return `<nav class="navbar navbar-expand-sm bg-light">
+    let user = await utils.getAuthenticatedUser();
+    return `<nav class="navbar navbar-expand-sm navbar-light bg-light">
               <ul class="navbar-nav">
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Home</a>
+                  <a id="navbarHome" class="nav-link" href="#">Home</a>
                 </li>
                 <li>
-                  <a class="nav-link" href="#/about">About</a>
+                  <a id="navbarAbout" class="nav-link" href="#/about">About</a>
                 </li>
                 <li class="nav-item">
-                  ${user ? `<a class="nav-link" href="#/users/${user.username}">User page</a>` : '<a class="nav-link" href="auth/google">Log in with google</a>'} 
+                  <a id="navbarAbout" class="nav-link" href="${user ? '#/users/${user.username}' : 'auth/google'}">${user ? 'User page' : 'Log in with google'}</a>
+                </li>
+                <li>
+                  <a id="navbarNew" class="nav-link" href="#/new">Write a post</a>
                 </li>
               </ul>
             </nav>
            `;
   },
   afterRender: async () => {
+    // let url = utils.parseUrl();
+    // if(url.name === 'new') $('#navbarNew').toggl
   }
 };
 

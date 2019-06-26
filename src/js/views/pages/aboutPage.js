@@ -1,9 +1,12 @@
+import $ from 'jquery';
+
 let aboutPage = {
   render: async function () {
-    return `<a href="#">Home</a>
+    return `
             <h1>My first single page application woohoo</h1>`;
   },
   afterRender: async () => {
+
   }
 };
 

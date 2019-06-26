@@ -1,5 +1,6 @@
 import path from 'path';
 import express from 'express';
+import cors from 'cors';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import passport from 'passport';
@@ -27,12 +28,13 @@ const app = express(),
 app.use(webpackDevMiddleware(compiler, {
   publicPath: config.output.publicPath
 }));
-
 app.use(webpackHotMiddleware(compiler));
 
+app.use(cors());
+
 app.use(cookieSession({
-  maxAge : 24 * 60 * 60 * 1000,
-  keys : ['mykey']
+  maxAge: 24 * 60 * 60 * 1000,
+  keys: ['mykey']
 }));
 
 app.use(passport.initialize());
@@ -53,8 +55,8 @@ app.get('/', (req, res, next) => {
 });
 
 app.use('/auth/google', authentication);
-app.use('/getAuthenticatedUser',getAutheticatedUserRouter);
-app.use('/profile',settingRouter);
+app.use('/getAuthenticatedUser', getAutheticatedUserRouter);
+app.use('/profile', settingRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/posts', postRouter);
 

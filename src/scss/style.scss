@@ -1,2 +1,73 @@
 @import "custom";
 @import "~bootstrap/scss/bootstrap";
+
+.avatar-small {
+  height: 50px;
+  width: 50px;
+}
+
+.profile-pic {
+  width: 12.2vw;
+  height: 12.2vw;
+}
+
+.card-header {
+  background : #ffffff;
+}
+
+.card-footer {
+  background: #ffffff;
+}
+
+.post, .post-preview {
+  margin-top: 2vw;
+  border: 1px solid #cecece;
+  background: #ffffff;
+}
+
+.post-title {
+  font-size: 19px;
+  font-weight: 600;
+  border: 0 !important;
+}
+
+.post-content {
+  border: 0 !important;
+}
+
+.post-reading-time {
+  border-top: 0;
+  position : absolute;
+  text-align: left;
+  vertical-align: bottom;
+  right: 82px;
+  bottom : 12px;
+}
+
+.post-preview {
+  min-height : 10vw;
+  //width: 50vw;
+}
+
+
+input[type="text"], textarea {
+  outline: none;
+  box-shadow: none !important;
+  border: 1px solid #ccc !important;
+  //border : 0;
+  resize: none;
+}
+
+h3 {
+  font-size : 27px;
+  line-height: 32px;
+  font-weight: 500;
+}
+
+h4{
+  font-size : 17px;
+  font-weight : 500;
+
+}
+
+
