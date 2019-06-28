@@ -1,9 +1,9 @@
-import utils from './../../service/utils'
+import utils from '../../service/utils';
 
 
 const navbar = {
-  render: async function () {
-    let user = await utils.getAuthenticatedUser();
+  async render() {
+    const user = await utils.getAuthenticatedUser();
     return `<nav class="navbar navbar-expand-sm navbar-light bg-light">
               <ul class="navbar-nav">
                 <li class="nav-item">
@@ -13,7 +13,7 @@ const navbar = {
                   <a id="navbarAbout" class="nav-link" href="#/about">About</a>
                 </li>
                 <li class="nav-item">
-                  <a id="navbarAbout" class="nav-link" href="${user ? '#/users/${user.username}' : 'auth/google'}">${user ? 'User page' : 'Log in with google'}</a>
+                  <a id="navbarAbout" class="nav-link" href="${user ? `#/users/${user.username}` : 'auth/google'}">${user ? 'User page' : 'Log in with google'}</a>
                 </li>
                 <li>
                   <a id="navbarNew" class="nav-link" href="#/new">Write a post</a>
@@ -23,9 +23,7 @@ const navbar = {
            `;
   },
   afterRender: async () => {
-    // let url = utils.parseUrl();
-    // if(url.name === 'new') $('#navbarNew').toggl
-  }
+  },
 };
 
 export default navbar;

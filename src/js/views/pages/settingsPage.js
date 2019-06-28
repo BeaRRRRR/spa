@@ -1,35 +1,35 @@
 import $ from 'jquery';
 import utils from '../../service/utils';
 
-const getAllUsers =async () => {
-  let users = await $.get('/api/v1/users');
+const getAllUsers = async () => {
+  const users = await $.get('/api/v1/users');
   console.log(users);
   return users;
 };
 
 const isUsernameAvaliable = async (username) => {
-  let  users = await getAllUsers();
+  const users = await getAllUsers();
   return !users.some(user => user.username === username);
 };
 
 const updateUser = async (user) => {
-  let oldUser = await utils.getAuthenticatedUser();
+  const oldUser = await utils.getAuthenticatedUser();
   console.log(user);
   await $.ajax({
-    url: `/api/v1/users/${oldUser.username}`,
+    url: `/api/v1/users/${oldUser._id}`,
     type: 'PUT',
     data: user,
-    success: function (data) {
+    success(data) {
       console.log('Load was performed.');
       console.log(data);
-    }
+    },
     // contentType : 'application/json'
   });
 };
 
-let aboutPage = {
-  render: async function () {
-    let user = await utils.getAuthenticatedUser();
+const aboutPage = {
+  async render() {
+    const user = await utils.getAuthenticatedUser();
     return `<div class="container">
              <form id="settingsForm">
               <div class="form-group">
@@ -50,33 +50,33 @@ let aboutPage = {
             </div>`;
   },
   afterRender: async () => {
-    let user =await utils.getAuthenticatedUser();
-    $('#settingsForm').on('submit', async function (event) {
+    const user = await utils.getAuthenticatedUser();
+    $('#settingsForm').on('submit', async (event) => {
       console.log(user);
       event.preventDefault();
-      let username = $('#username').val();
+      const username = $('#username').val();
       console.log(username);
-      let usernameAvaliable = await isUsernameAvaliable(username);
-      if(usernameAvaliable || username === user.username) {
-        let name = $('#name').val();
-        let profileDescription = $('#profileDescription').val();
+      const usernameAvaliable = await isUsernameAvaliable(username);
+      if (usernameAvaliable || username === user.username) {
+        const name = $('#name').val();
+        const profileDescription = $('#profileDescription').val();
         await updateUser({
           _id: user._id,
           email: user.email,
-          name: name,
-          username: username,
-          profileDescription: profileDescription,
+          name,
+          username,
+          profileDescription,
           googleId: user.googleId,
-          avatar: user.avatar
+          avatar: user.avatar,
         });
-      }else {
+      } else {
         $('#username')[0].setCustomValidity('This username already exists');
       }
     });
-    $('#cancel').on('click',function () {
-      window.location = `#/users/${user.username}`
-    })
-  }
+    $('#cancel').on('click', () => {
+      window.location = `#/users/${user.username}`;
+    });
+  },
 };
 
 export default aboutPage;

@@ -9,6 +9,5 @@ getAuthenticatedUserRouter.route('/')
     } else {
       res.json(false);
     }
-
   });
 export default getAuthenticatedUserRouter;

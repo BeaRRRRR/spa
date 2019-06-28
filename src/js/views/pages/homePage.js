@@ -7,17 +7,16 @@ async function getPosts() {
 }
 
 const getAuthor = async (post) => {
-  const author = await $.get(`api/v1/users/${post.author}`);
+  const author = await $.get(`api/v1/users/${post.authorId}`);
   return author;
 };
 
-let homePage = {
-  render: async function () {
-    let posts = await getPosts();
-    let postsHtml = await Promise.all(posts.map(async (post) => {
-        let author = await getAuthor(post);
-        console.log(author);
-        // return `<div class="post-preview container" style="cursor: pointer;" onclick="window.location='#/users/${author.username}/${post._id}';">
+const homePage = {
+  async render() {
+    const posts = await getPosts();
+    const postsHtml = await Promise.all(posts.map(async (post) => {
+      const author = await getAuthor(post);
+      console.log(author);
       return `<div class="post-preview card flex-row flex-wrap" style="cursor : pointer" onclick="window.location='#/users/${author.username}/${post._id}';">
                               <div class="card-header">
                                 <a href="#/users/${author.username}">
@@ -29,13 +28,12 @@ let homePage = {
                                <h4 class="card-subtitle mb-2 text-muted">${author.name} on ${post.date}</h4>
                               </div>
                               <!--<div class="card-footer"></div>-->
-                              <h4>Likes : ${post.liked.length}</h4>
+                              <h4>Likes : ${post.liked != null ? post.liked.length : '0'}</h4>
                               <h4 class="post-reading-time">Read time : ${post.readTime} min</h4>
                             </div>        
                           </div>`;
-      }
-    ));
-    let html = postsHtml.join('\n');
+    }));
+    const html = postsHtml.join('\n');
     return `<div>
               <!--<ul>-->
                ${html} 
@@ -43,7 +41,7 @@ let homePage = {
             </div>`;
   },
   afterRender: async () => {
-  }
+  },
 };
 
 export default homePage;

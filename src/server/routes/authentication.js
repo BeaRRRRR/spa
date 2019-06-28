@@ -6,11 +6,11 @@ const authRouter = express.Router();
 authRouter.route('/')
   .get(passport.authenticate('google', {
     // scope: ['https://www.googleapis.com/auth/plus.login']
-    scope: ['profile', 'email']
+    scope: ['profile', 'email'],
   }));
 authRouter.route('/callback')
-  .get(passport.authenticate('google', {failureRedirect: '/login'}),function (req, res) {
-    res.redirect('/')
+  .get(passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
+    res.redirect('/');
   });
 
 export default authRouter;

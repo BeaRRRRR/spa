@@ -1,13 +1,11 @@
 import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
-const PostSchema = new Schema({
-  title: { type: String },
+const CommentSchema = new Schema({
+  postId: { type: Schema.Types.Object },
   authorId: { type: Schema.Types.ObjectId },
   content: { type: String },
   date: { type: String },
-  readTime: { type: Number },
-  liked: [],
 });
 
-export default mongoose.model('posts', PostSchema);
+export default mongoose.model('comments', CommentSchema);

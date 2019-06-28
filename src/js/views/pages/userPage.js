@@ -1,29 +1,28 @@
 import $ from 'jquery';
-import utils from '../../service/utils.js'
+import utils from '../../service/utils';
 
 const getUser = async () => {
-  let username = utils.parseUrl().name;
-  let user = await $.get(`/api/v1/users/${username}`);
+  const username = utils.parseUrl().name;
+  const user = await $.get(`/api/v1/users/?username=${username}`);
   return user;
 };
 
-let userPage = {
-  render: async function () {
-    let user = await getUser();
+const userPage = {
+  async render() {
+    const user = await getUser();
     return `<div class="card flex-row flex-wrap">
-			        <div class="card-header border-0">
-				        <img class="profile-pic" src="${user.avatar}" alt="well there must be a user avatar">
-			        </div>
-			        <div class="card-body">
-			        	<h1 class="card-header">${user.name}</h1>
-			        	<p class="card-text">${user.status ? user.status : 'No bio yet'}</p>
-			         </div>
-			         <a href="#/settings">Settings</a>
-		        </div>`;
-
+              <div class="card-header border-0">
+                <img class="profile-pic" src="${user.avatar}" alt="well there must be a user avatar">
+              </div>
+              <div class="card-body">
+                <h1 class="card-header">${user.name}</h1>
+                <p class="card-text">${user.status ? user.status : 'No bio yet'}</p>
+              </div>
+              <a href="#/settings">Settings</a>
+            </div>`;
   },
   afterRender: async () => {
-  }
+  },
 };
 
 export default userPage;
