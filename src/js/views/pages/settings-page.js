@@ -1,31 +1,13 @@
 import $ from 'jquery';
 import utils from '../../service/utils';
+import userRepository from '../../service/repositories/user-repository';
 
-const getAllUsers = async () => {
-  const users = await $.get('/api/v1/users');
-  console.log(users);
-  return users;
-};
 
 const isUsernameAvaliable = async (username) => {
-  const users = await getAllUsers();
+  const users = await userRepository.getAll();
   return !users.some(user => user.username === username);
 };
 
-const updateUser = async (user) => {
-  const oldUser = await utils.getAuthenticatedUser();
-  console.log(user);
-  await $.ajax({
-    url: `/api/v1/users/${oldUser._id}`,
-    type: 'PUT',
-    data: user,
-    success(data) {
-      console.log('Load was performed.');
-      console.log(data);
-    },
-    // contentType : 'application/json'
-  });
-};
 
 const aboutPage = {
   async render() {
@@ -60,7 +42,7 @@ const aboutPage = {
       if (usernameAvaliable || username === user.username) {
         const name = $('#name').val();
         const profileDescription = $('#profileDescription').val();
-        await updateUser({
+        await userRepository.update({
           _id: user._id,
           email: user.email,
           name,
@@ -69,6 +51,7 @@ const aboutPage = {
           googleId: user.googleId,
           avatar: user.avatar,
         });
+        window.location = `#/users/${username}`;
       } else {
         $('#username')[0].setCustomValidity('This username already exists');
       }

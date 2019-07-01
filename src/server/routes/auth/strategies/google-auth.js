@@ -1,16 +1,15 @@
 import express from 'express';
 import passport from 'passport';
 
-const authRouter = express.Router();
+const googleAuthRouter = express.Router();
 
-authRouter.route('/')
+googleAuthRouter.route('/')
   .get(passport.authenticate('google', {
-    // scope: ['https://www.googleapis.com/auth/plus.login']
     scope: ['profile', 'email'],
   }));
-authRouter.route('/callback')
+googleAuthRouter.route('/callback')
   .get(passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
     res.redirect('/');
   });
 
-export default authRouter;
+export default googleAuthRouter;

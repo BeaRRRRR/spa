@@ -16,7 +16,7 @@ const navbar = {
                   <a id="navbarAbout" class="nav-link" href="${user ? `#/users/${user.username}` : 'auth/google'}">${user ? 'User page' : 'Log in with google'}</a>
                 </li>
                 <li>
-                  <a id="navbarNew" class="nav-link" href="#/new">Write a post</a>
+                  <a id="navbarNew" class="nav-link ${user ? '' : 'disabled'}" href="#/new">Write a post</a>
                 </li>
               </ul>
             </nav>

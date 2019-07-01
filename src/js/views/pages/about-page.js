@@ -1,4 +1,3 @@
-import $ from 'jquery';
 
 const aboutPage = {
   async render() {

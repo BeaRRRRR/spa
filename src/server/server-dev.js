@@ -10,12 +10,12 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import config from '../../webpack.dev.config';
-import postRouter from './routes/api/v1/postRouter';
-import userRouter from './routes/api/v1/userRouter';
-import commentRouter from './routes/api/v1/commentRouter';
-import settingRouter from './routes/settingRouter';
-import getAutheticatedUserRouter from './routes/util/getAuthenticatedUserRouter';
-import authentication from './routes/authentication';
+import postRouter from './routes/api/v1/post-router';
+import userRouter from './routes/api/v1/user-router';
+import commentRouter from './routes/api/v1/comment-router';
+import settingRouter from './routes/setting-router';
+import getAutheticatedUserRouter from './routes/util/get-authenticated-user-router';
+import authentication from './routes/auth/authentication';
 import './config/passport-config';
 
 const db = mongoose.connect('mongodb://localhost/spa-db', { useNewUrlParser: true });
@@ -61,9 +61,8 @@ app.get('/', (req, res, next) => {
   });
 });
 
-app.use('/auth/google', authentication);
+app.use('/auth', authentication);
 app.use('/getAuthenticatedUser', getAutheticatedUserRouter);
-app.use('/profile', settingRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/posts', postRouter);
 app.use('/api/v1/comments', commentRouter);

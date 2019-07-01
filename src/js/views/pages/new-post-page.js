@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import showdown from 'showdown';
 import utils from '../../service/utils';
+import postRepository from '../../service/repositories/post-repository';
 
 const converter = new showdown.Converter();
 let isEditing = false;
@@ -9,21 +10,22 @@ const getAuthenticatedUser = async () => {
   const response = await $.get('/getAuthenticatedUser');
   return response;
 };
-const getPost = async (id) => {
-  const post = await $.get(`/api/v1/posts/${id}`);
-  return post;
-};
 
 const newPostPage = {
   async render() {
     const { resource } = utils.parseUrl();
     const editId = resource.substr(11);
+    const user = utils.getAuthenticatedUser();
+    if (!user) window.location = 'auth/google';
     let html;
     if (editId) {
       isEditing = true;
-      post = await getPost(editId);
+      post = await postRepository.getById(editId);
       html = converter.makeMarkdown(post.content);
       console.log(post);
+    }
+    if (isEditing && !user._id.equals(post.authorId)) {
+      return 'Only authors can edit their posts';
     }
     return `<div class="container">
               <form id="newPostForm">
@@ -79,46 +81,37 @@ const newPostPage = {
       const title = $('#title').val();
       const content = $('#textarea').val();
       const html = converter.makeHtml(content);
+      const date = new Date().toLocaleDateString();
+      const readTime = Math.round(content.split(' ').length / 200);
       const user = await getAuthenticatedUser();
       console.log(user);
       const authorId = user._id;
-      const date = new Date().toLocaleDateString();
-      const readTime = Math.round(content.split(' ').length / 200);
       if (isEditing) {
-        await $.ajax({
-          url: '/api/v1/posts',
-          type: 'PUT',
-          data: {
-            _id: post._id,
-            title,
-            authorId,
-            content: html,
-            date,
-            readTime,
-            liked: post.liked,
-          },
-          success(data) {
+        postRepository.update({
+          _id: post._id,
+          title,
+          authorId,
+          content: html,
+          date,
+          readTime,
+          liked: post.liked,
+        })
+          .then(() => {
             window.location.href = `#/users/${user.username}/${post._id}`;
-            console.log(data);
-          },
-          error(err) {
-            console.log(err);
-          },
-        });
+          })
+          .catch(err => console.log(err));
       } else {
-        await $.post('/api/v1/posts',
-          {
-            title,
-            authorId,
-            content: html,
-            date,
-            readTime,
-          },
-          (data) => {
-            console.log(data);
+        postRepository.save({
+          title,
+          authorId,
+          content: html,
+          date,
+          readTime,
+        })
+          .then((data) => {
             window.location.href = `#/users/${user.username}/${data._id}`;
-          },
-          'json');
+          })
+          .catch(err => console.log(err));
       }
     });
   },
