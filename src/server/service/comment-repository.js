@@ -8,10 +8,10 @@ class CommentRepository {
   }
 
   getAllByPostId(postId) {
-    return Comment.find({ _id: new ObjectId(postId) }).exec();
+    return Comment.find({ postId: new ObjectId(postId) }).exec();
   }
 
-  save(comment){
+  save(comment) {
     const newComment = new Comment(comment);
     return newComment.save();
   }

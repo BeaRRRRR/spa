@@ -1,23 +1,26 @@
 import $ from 'jquery';
 
 class PostRepository {
-  static getById(id) {
+  constructor() {
+  }
+
+  getById(id) {
     return $.get(`/api/v1/posts/${id}`);
   }
 
-  static getByPage(page) {
+  getByPage(page) {
     return $.get(`api/v1/posts?page=${page}`);
   }
 
-  static count() {
+  count() {
     return $.get('api/v1/posts/count');
   }
 
-  static save(post) {
+  save(post) {
     return $.post('/api/v1/posts', post, 'json');
   }
 
-  static update(post) {
+  update(post) {
     return $.ajax({
       url: `/api/v1/posts/${post._id}`,
       type: 'PUT',
@@ -25,7 +28,7 @@ class PostRepository {
     });
   }
 
-  static delete(id) {
+  delete(id) {
     return $.ajax({
       url: `/api/v1/posts/${id}`,
       type: 'DELETE',

@@ -1,5 +1,4 @@
 import express from 'express';
-// import passport from 'passport';
 import googleAuthRouter from './strategies/google-auth';
 
 const authRouter = express.Router();

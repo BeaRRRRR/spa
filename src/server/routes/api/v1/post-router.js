@@ -9,7 +9,7 @@ const postRepository = new PostRepository();
 
 postRouter.route('/')
   .get(async (req, res) => {
-    console.log('Getting all posts');
+    // Getting all posts
     postRepository.getAll(req.query.page)
       .then(data => res.json(data))
       .catch(err => console.log(err));
@@ -23,24 +23,25 @@ postRouter.route('/')
       postRepository.save(newPost)
         .then(post => res.status(201).json(post))
         .catch(err => res.send(500, { error: err }));
-
     }
   });
 
 postRouter.route('/count')
   .get((req, res) => {
+    // Count all the posts available for pagination
     postRepository.count()
       .then(data => res.send(data.toString()))
       .catch(err => res.send(500, { error: err }));
   });
 postRouter.route('/:postId')
   .get((req, res) => {
-    console.log('Getting the post by id');
+    // Getting the post by id
     postRepository.getById(req.params.postId)
       .then(data => res.json(data))
       .catch(err => res.send(500, { error: err }));
   })
   .put((req, res) => {
+    // Only authorized authors of post can change its content
     if (req.user._id != req.body.authorId) {
       res.sendStatus(401);
     }
@@ -61,12 +62,14 @@ postRouter.route('/:postId')
       .catch(err => res.send(500, { error: err }));
   })
   .delete(async (req, res) => {
-    const authorId = await postRepository.getById(req.params.postId);
+    const { authorId } = await postRepository.getById(req.params.postId);
     if (!req.user._id.equals(authorId)) {
       res.sendStatus(401);
     } else {
       console.log(req.body.id);
-      postRepository.deleteById(req.body.id);
+      postRepository.deleteById(req.body.id)
+        .then(res.sendStatus(200))
+        .catch(err => res.status(500).send({ error: err }));
     }
   });
 

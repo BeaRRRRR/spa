@@ -1,11 +1,14 @@
 import $ from 'jquery';
 import showdown from 'showdown';
 import utils from '../../service/utils';
-import postRepository from '../../service/repositories/post-repository';
+import PostRepository from '../../service/repositories/post-repository';
 
+const postRepository = new PostRepository();
 const converter = new showdown.Converter();
+
 let isEditing = false;
 let post;
+
 const getAuthenticatedUser = async () => {
   const response = await $.get('/getAuthenticatedUser');
   return response;
@@ -53,6 +56,7 @@ const newPostPage = {
       if ($previewButton.hasClass('btn-outline-secondary')) {
         title = $('#title').val();
         markdown = $('#textarea').val();
+        console.log(markdown);
         const html = converter.makeHtml(markdown);
         $('#post').html(`<div class="card" style="border : 0 !important;">
                             <div class="card-body">
@@ -70,7 +74,11 @@ const newPostPage = {
         		    </form>`);
         $('textarea').autoResize();
         $('#textarea').val(markdown);
+        // Making the textarea higher to fit all the text without scrolling
+        $('#textarea').height($('#textarea').prop('scrollHeight'));
         $('#title').val(title);
+        // The same with title
+        $('#title').height($('#title').prop('scrollHeight'));
       }
       $previewButton.toggleClass('btn-outline-secondary');
       $previewButton.toggleClass('btn-secondary');
@@ -78,11 +86,11 @@ const newPostPage = {
     $('#newPostForm').on('submit', async (event) => {
       event.preventDefault();
       console.log('submit');
-      const title = $('#title').val();
-      const content = $('#textarea').val();
-      const html = converter.makeHtml(content);
+      title = $('#title').val();
+      markdown = $('#textarea').val();
+      const html = converter.makeHtml(markdown);
       const date = new Date().toLocaleDateString();
-      const readTime = Math.round(content.split(' ').length / 200);
+      const readTime = Math.round(markdown.split(' ').length / 200);
       const user = await getAuthenticatedUser();
       console.log(user);
       const authorId = user._id;

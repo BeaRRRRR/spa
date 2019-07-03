@@ -1,19 +1,22 @@
 import $ from 'jquery';
 
 class UserRepository {
-  static getAll() {
+  constructor() {
+  }
+
+  getAll() {
     return $.get('api/v1/users');
   }
 
-  static getById(id) {
+  getById(id) {
     return $.get(`api/v1/users/${id}`);
   }
 
-  static getByUsername(username) {
+  getByUsername(username) {
     return $.get(`/api/v1/users/?username=${username}`);
   }
 
-  static update(user) {
+  update(user) {
     return $.ajax({
       url: `/api/v1/users/${user._id}`,
       type: 'PUT',

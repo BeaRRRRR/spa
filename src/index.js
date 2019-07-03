@@ -26,22 +26,21 @@ const routes = {
 
 async function router() {
   const request = utils.parseUrl();
-  const url = `#${
-    request.resource ? `/${request.resource.slice(0, request.resource.indexOf('?') >= 0 ? request.resource.indexOf('?') : request.resource.length)}` : ''
-  }${request.name ? '/name' : ''
-  }${request.postName ? '/postname' : ''}`;
-  console.log(url);
+  const url = `#${request.resource ? `/${request.resource.slice(0, request.resource.indexOf('?') >= 0 ? request.resource.indexOf('?') : request.resource.length)}` : ''}${request.name ? '/name' : ''}${request.postName ? '/postname' : ''}`;
+  // Getting the page based on the url
   const page = routes[url];
+  // Rendering the page
   $('#content').html(await page.render());
   $('#navbar').html(await navbar.render());
   await Promise.all([page.afterRender(), navbar.afterRender()]);
 }
 
-window.addEventListener('hashchange', router);
-window.addEventListener('load', router);
-$.ajaxSetup({
-  async: true,
+$(window).on('hashchange', router);
+$(window).on('load', router);
+$(window).on('load', () => {
+  console.log('load event fired');
 });
+
 // Needed for Hot Module Replacement
 if (typeof (module.hot) !== 'undefined') {
   module.hot.accept(); // eslint-disable-line no-undef

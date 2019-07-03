@@ -1,17 +1,27 @@
 import $ from 'jquery';
 import utils from '../../service/utils';
-import postRepository from '../../service/repositories/post-repository';
-import userRepository from '../../service/repositories/user-repository';
-import commmentRepository from '../../service/repositories/comment-repository';
+import PostRepository from '../../service/repositories/post-repository';
+import UserRepository from '../../service/repositories/user-repository';
+import CommentRepository from '../../service/repositories/comment-repository';
+
+const postRepository = new PostRepository();
+const userRepository = new UserRepository();
+const commentRepository = new CommentRepository();
+
+let post;
+let authenticatedUser;
 
 const postPage = {
   async render() {
-    const date1 = new Date();
-    const [post, user] = await Promise.all([postRepository.getById(utils.parseUrl().postName), utils.getAuthenticatedUser()]);
-    const [author, comments] = await Promise.all([userRepository.getById(post.authorId), commmentRepository.getAllByPostId(post._id)]);
-    const isLiked = post.liked.includes(user._id);
-    const date2 = new Date();
-    console.log(date2 - date1);
+    const postPromise = postRepository.getById(utils.parseUrl().postName)
+      .then(async (post) => {
+        const [author, comments] = await Promise.all([userRepository.getById(post.authorId), commentRepository.getAllByPostId(post._id)]);
+        return [post, author, comments];
+      });
+    const [[_post, author, comments], _authenticatedUser] = await Promise.all([postPromise, utils.getAuthenticatedUser()]);
+    post = _post;
+    authenticatedUser = _authenticatedUser;
+    const isLiked = post.liked.includes(authenticatedUser._id);
     let commentsHtml = await Promise.all(comments.map(async (comment) => {
       const author = await userRepository.getById(comment.authorId);
       return `<div class="comment card">
@@ -36,16 +46,18 @@ const postPage = {
                  </div>
                 </div>
               </div>
-              <h6 id="likesCount">Likes : ${post.liked.length - 1}</h6>
-              <span id="heartIcon" class="${isLiked ? 'fas' : 'far'} fa-heart"></span>
-              ${user._id == post.authorId ? `
+              <h6>
+                <span id="heartIcon" class="${isLiked ? 'fas' : 'far'} fa-heart"></span>
+                <span id="likeCount">${post.liked.length - 1}</span>
+              </h6>
+              ${authenticatedUser._id == post.authorId ? `
               <a id="edit" class="btn btn-outline-dark" href="#/new?editId=${post._id}">Edit</a>
               <a id="delete" class="btn btn-outline-danger">Delete</a>` : ''}
               <div class="container">
                 <form id="newCommentForm">
                   <div class="form-group">
-                    <label for="comment">Write a comment</label>
-                    <input id="commentContentInput" name="commentContentInput" type="text" class="form-control">
+                    <label for="comment">${_authenticatedUser ? 'Write a comment' : 'Only authorized users can write comments'}</label>
+                    <input id="commentContentInput" name="commentContentInput" type="text" class="form-control" ${authenticatedUser ? '' : 'disabled'}>
                   </div>
                   <button type="submit" class="btn btn-light">Send</button>
                 </form>
@@ -54,24 +66,21 @@ const postPage = {
               </div>`;
   },
   afterRender: async () => {
-    const post = postRepository.getById(utils.parseUrl().postName);
     console.log(post);
-    const user = await utils.getAuthenticatedUser();
     $(document).on('click', '#heartIcon', async () => {
       console.log('clicked');
-      if (post.liked.includes(user._id)) {
+      if (post.liked.includes(authenticatedUser._id)) {
         $('#heartIcon').removeClass('fas');
         $('#heartIcon').addClass('far');
-        post.liked.splice(post.liked.indexOf(user._id), 1);
-      }
-      else {
-        post.liked.push(user._id);
+        post.liked.splice(post.liked.indexOf(authenticatedUser._id), 1);
+      } else {
+        post.liked.push(authenticatedUser._id);
         $('#heartIcon').removeClass('far');
         $('#heartIcon').addClass('fas');
       }
       postRepository.update(post);
-      $('#likesCount').text(
-        `Likes : ${post.liked.length - 1}`,
+      $('#likeCount').text(
+        `${post.liked.length - 1}`,
       );
     });
     $('#delete').on('click', async () => {
@@ -87,9 +96,9 @@ const postPage = {
       event.preventDefault();
       const content = $('#commentContentInput').val();
       const date = new Date().toLocaleDateString();
-      commmentRepository.save({
+      commentRepository.save({
         postId: post._id,
-        authorId: user._id,
+        authorId: authenticatedUser._id,
         content,
         date,
       });

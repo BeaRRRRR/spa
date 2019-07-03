@@ -12,8 +12,17 @@ class UserRepository {
     return User.findById(id).exec();
   }
 
+  getByGoogleId(googleId) {
+    return User.findOne({ googleId }).exec();
+  }
+
   getByUsername(username) {
     return User.findOne({ username }).exec();
+  }
+
+  save(user) {
+    const newUser = new User(user);
+    return newUser.save();
   }
 
   update(filter, doc) {

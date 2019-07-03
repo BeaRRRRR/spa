@@ -1,11 +1,14 @@
 import $ from 'jquery';
 
 class CommentRepository {
-  static getAllByPostId(postId) {
+  constructor() {
+  }
+
+  getAllByPostId(postId) {
     return $.get(`api/v1/comments/${postId}`);
   }
 
-  static save(comment) {
+  save(comment) {
     $.post(`api/v1/comments/${comment.postId}`, comment);
   }
 }

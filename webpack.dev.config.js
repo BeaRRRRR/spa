@@ -4,12 +4,12 @@ const HtmlWebPackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
-    main: ['webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000', './src/index.js']
+    main: ['webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000', './src/index.js'],
   },
   output: {
     path: path.join(__dirname, 'dist'),
     publicPath: '/',
-    filename: '[name].js'
+    filename: '[name].js',
   },
   mode: 'development',
   target: 'web',
@@ -28,13 +28,13 @@ module.exports = {
         use: [
           {
             loader: 'html-loader',
-            //options: { minimize: true }
-          }
-        ]
+            // options: { minimize: true }
+          },
+        ],
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader']
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.(scss)$/,
@@ -45,30 +45,30 @@ module.exports = {
         }, {
           loader: 'postcss-loader', // Run post css actions
           options: {
-            plugins: function () { // post css plugins, can be exported to postcss.config.js
+            plugins() { // post css plugins, can be exported to postcss.config.js
               return [
                 require('precss'),
-                require('autoprefixer')
+                require('autoprefixer'),
               ];
-            }
-          }
+            },
+          },
         }, {
-          loader: 'sass-loader' // compiles Sass to CSS
-        }]
+          loader: 'sass-loader', // compiles Sass to CSS
+        }],
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
-        use: ['file-loader']
-      }
-    ]
+        use: ['file-loader'],
+      },
+    ],
   },
   plugins: [
     new HtmlWebPackPlugin({
       template: './src/html/index.html',
       filename: './index.html',
-      excludeChunks: ['server']
+      excludeChunks: ['server'],
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
-  ]
+    new webpack.NoEmitOnErrorsPlugin(),
+  ],
 };

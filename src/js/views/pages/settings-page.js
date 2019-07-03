@@ -1,17 +1,18 @@
 import $ from 'jquery';
 import utils from '../../service/utils';
-import userRepository from '../../service/repositories/user-repository';
+import UserRepository from '../../service/repositories/user-repository';
 
+const userRepository = new UserRepository();
+let user;
 
-const isUsernameAvaliable = async (username) => {
+async function isUsernameAvaliable(username) {
   const users = await userRepository.getAll();
   return !users.some(user => user.username === username);
-};
+}
 
-
-const aboutPage = {
+const settingsPage = {
   async render() {
-    const user = await utils.getAuthenticatedUser();
+    user = await utils.getAuthenticatedUser();
     return `<div class="container">
              <form id="settingsForm">
               <div class="form-group">
@@ -32,7 +33,6 @@ const aboutPage = {
             </div>`;
   },
   afterRender: async () => {
-    const user = await utils.getAuthenticatedUser();
     $('#settingsForm').on('submit', async (event) => {
       console.log(user);
       event.preventDefault();
@@ -62,4 +62,4 @@ const aboutPage = {
   },
 };
 
-export default aboutPage;
+export default settingsPage;

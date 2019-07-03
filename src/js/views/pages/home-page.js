@@ -1,5 +1,8 @@
-import postRepository from '../../service/repositories/post-repository';
-import userRepository from '../../service/repositories/user-repository';
+import PostRepository from '../../service/repositories/post-repository';
+import UserRepository from '../../service/repositories/user-repository';
+
+const postRepository = new PostRepository();
+const userRepository = new UserRepository();
 
 const homePage = {
   async render() {
@@ -19,7 +22,7 @@ const homePage = {
                    <h3 class="card-title">${post.title}</h3>
                    <h4 class="card-subtitle mb-2 text-muted">${author.name} on ${post.date}</h4>
                   </div>
-                  <h4>Likes : ${post.liked != null ? post.liked.length : '0'}</h4>
+                  <h4 class="post-likes-count">Likes : ${post.liked.length - 1}</h4>
                   <h4 class="post-reading-time">Read time : ${post.readTime} min</h4>
                 </div>        
               </div>`;
@@ -29,12 +32,12 @@ const homePage = {
                ${html} 
                <div>
                  <nav aria-label="Page navigation example">
-                   <ul class="pagination">
-                     <li class="page-item ${currentPage === 1 ? 'disabled' : ''}"><a class="page-link" href="#?page=${currentPage - 1}">Previous</a></li>
-                     <li class="page-item active">
+                   <ul class="pagination justify-content-center">
+                     <li class="page-item ${currentPage === 1 ? 'disabled ' : ''} previous-page"><a class="page-link" href="#?page=${currentPage - 1}">Previous</a></li>
+                     <li class="page-item gray">
                        <a class="page-link">${currentPage} <span class="sr-only">(current)</span></a>
                      </li>
-                     <li class="page-item ${count <= currentPage * 10 ? 'disabled' : ''}"><a class="page-link" href="#?page=${parseInt(currentPage + 1, 10)}">Next</a></li>
+                     <li class="page-item ${count <= currentPage * 10 ? 'disabled' : ''} next-page"><a class="page-link" href="#?page=${parseInt(currentPage + 1, 10)}">Next</a></li>
                    </ul>
                  </nav> 
                </div>

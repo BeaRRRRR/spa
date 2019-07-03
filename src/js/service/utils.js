@@ -11,9 +11,6 @@ const utils = {
     };
     return parsedUrl;
   },
-  removeAllWhitespaces(str) {
-    str = str.replace(/\s+/g, '');
-  },
 
   async getAuthenticatedUser() {
     const response = await $.get('/getAuthenticatedUser');

@@ -13,7 +13,6 @@ import config from '../../webpack.dev.config';
 import postRouter from './routes/api/v1/post-router';
 import userRouter from './routes/api/v1/user-router';
 import commentRouter from './routes/api/v1/comment-router';
-import settingRouter from './routes/setting-router';
 import getAutheticatedUserRouter from './routes/util/get-authenticated-user-router';
 import authentication from './routes/auth/authentication';
 import './config/passport-config';
