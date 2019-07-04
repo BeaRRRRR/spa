@@ -22,6 +22,7 @@ const postPage = {
     post = _post;
     authenticatedUser = _authenticatedUser;
     const isLiked = post.liked.includes(authenticatedUser._id);
+    // Generating html with all the comments inside
     let commentsHtml = await Promise.all(comments.map(async (comment) => {
       const author = await userRepository.getById(comment.authorId);
       return `<div class="comment card">
@@ -46,13 +47,14 @@ const postPage = {
                  </div>
                 </div>
               </div>
-              <h6>
-                <span id="heartIcon" class="${isLiked ? 'fas' : 'far'} fa-heart"></span>
-                <span id="likeCount">${post.liked.length - 1}</span>
-              </h6>
-              ${authenticatedUser._id == post.authorId ? `
-              <a id="edit" class="btn btn-outline-dark" href="#/new?editId=${post._id}">Edit</a>
-              <a id="delete" class="btn btn-outline-danger">Delete</a>` : ''}
+              <div>
+                ${authenticatedUser ? `
+                <span id="heartIcon" class="${isLiked ? 'fas' : 'far'} fa-heart fa-2x"></span>
+                <span id="likeCount">${post.liked.length - 1}</span>` : ''}
+                ${authenticatedUser._id == post.authorId ? `
+                <a id="delete" class="btn btn-outline-danger">Delete</a>
+                <a id="edit" class="btn btn-outline-dark" href="#/new?editId=${post._id}">Edit</a>` : ''}
+              </div>
               <div class="container">
                 <form id="newCommentForm">
                   <div class="form-group">

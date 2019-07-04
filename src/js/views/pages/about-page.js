@@ -1,4 +1,3 @@
-
 const aboutPage = {
   async render() {
     return `

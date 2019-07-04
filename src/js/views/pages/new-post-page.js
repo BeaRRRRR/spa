@@ -8,17 +8,13 @@ const converter = new showdown.Converter();
 
 let isEditing = false;
 let post;
-
-const getAuthenticatedUser = async () => {
-  const response = await $.get('/getAuthenticatedUser');
-  return response;
-};
+let user;
 
 const newPostPage = {
   async render() {
     const { resource } = utils.parseUrl();
     const editId = resource.substr(11);
-    const user = utils.getAuthenticatedUser();
+    user = await utils.getAuthenticatedUser();
     if (!user) window.location = 'auth/google';
     let html;
     if (editId) {
@@ -27,16 +23,16 @@ const newPostPage = {
       html = converter.makeMarkdown(post.content);
       console.log(post);
     }
-    if (isEditing && !user._id.equals(post.authorId)) {
+    if (isEditing && user._id !== post.authorId) {
       return 'Only authors can edit their posts';
     }
     return `<div class="container">
               <form id="newPostForm">
                 <div class="post container" id="post">
                   <div id="form-body" class="form-group">
-                    <textarea class="post-title form-control" name="title" id="title" type="text" placeholder="Title" rows="1">${editId ? post.title : ''}</textarea>
+                    <textarea class="post-title form-control" name="title" id="title" type="text" placeholder="Title" rows="1" required minlength="1" maxlength="80">${editId ? post.title : ''}</textarea>
                     <textarea class="post-content form-control" name="textarea" id="textarea" type="text"
-                              placeholder="Write your markdown here" rows="8">${editId ? html : ''}</textarea>
+                              placeholder="Write your markdown here" rows="8" required minlength="1" maxlength="10000">${editId ? html : ''}</textarea>
                   </div>
                 </div>
                 <div class="container" style="display: flex; justify-content: flex-end">
@@ -91,7 +87,6 @@ const newPostPage = {
       const html = converter.makeHtml(markdown);
       const date = new Date().toLocaleDateString();
       const readTime = Math.round(markdown.split(' ').length / 200);
-      const user = await getAuthenticatedUser();
       console.log(user);
       const authorId = user._id;
       if (isEditing) {
@@ -105,7 +100,7 @@ const newPostPage = {
           liked: post.liked,
         })
           .then(() => {
-            window.location.href = `#/users/${user.username}/${post._id}`;
+            window.location = `#/users/${user.username}/${post._id}`;
           })
           .catch(err => console.log(err));
       } else {
@@ -117,7 +112,7 @@ const newPostPage = {
           readTime,
         })
           .then((data) => {
-            window.location.href = `#/users/${user.username}/${data._id}`;
+            window.location = `#/users/${user.username}/${data._id}`;
           })
           .catch(err => console.log(err));
       }

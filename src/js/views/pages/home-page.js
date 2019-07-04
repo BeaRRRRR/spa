@@ -9,6 +9,7 @@ const homePage = {
     const currentPage = parseInt(window.location.hash.substr(7), 10) || 1;
     const [count, posts] = await Promise.all([postRepository.count(), postRepository.getByPage(currentPage)]);
     console.log(currentPage);
+    // Making html code with all the posts
     const postsHtml = await Promise.all(posts.map(async (post) => {
       const author = await userRepository.getById(post.authorId);
       console.log(author);

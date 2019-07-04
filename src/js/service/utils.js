@@ -12,6 +12,11 @@ const utils = {
     return parsedUrl;
   },
 
+  /**
+   * Returns the user that is currently logged in.
+   *
+   * @return {User} The user object.
+   */
   async getAuthenticatedUser() {
     const response = await $.get('/getAuthenticatedUser');
     return response;

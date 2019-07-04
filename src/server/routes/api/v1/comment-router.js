@@ -14,7 +14,7 @@ commentRouter.route('/:postId')
       .catch(err => res.send(500, { error: err }));
   })
   .post(async (req, res) => {
-    // Handles comment creation
+    // Only authorized users can leave comments
     if (req.user) {
       res.sendStatus(401);
     }

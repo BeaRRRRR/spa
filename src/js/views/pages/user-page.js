@@ -5,20 +5,20 @@ const userRepository = new UserRepository();
 
 const userPage = {
   async render() {
-    const authenticatedUser = utils.getAuthenticatedUser();
-    const user = await userRepository.getByUsername(utils.parseUrl().name);
+    const [authenticatedUser, user] = await Promise.all([utils.getAuthenticatedUser(), userRepository.getByUsername(utils.parseUrl().name)]);
     return `<div class="card flex-row flex-wrap userpage">
               <div class="card-header">
                 <img class="profile-pic" src="${user.avatar}" alt="well there must be a user avatar">
               </div>
               <div class="card-body">
+                ${authenticatedUser._id === user._id ? ` 
+                  <div class="userpage-buttons">
+                    <a class="btn settings-button" role="button" href="#/settings">Settings</a>
+                    <a class="btn btn-dark" role="button" href="auth/logout">Logout</a>
+                  </div>` : ''}
                 <h1 class="card-header user-profile-header">${user.name}</h1>
                 <p class="card-text">${user.profileDescription ? user.profileDescription : 'No bio yet'}</p>
               </div>
-              ${authenticatedUser ? ` 
-                <a class="btn btn-dark setting-button" href="#/settings">Settings</a>
-                <a href="auth/logout">Logout</a>
-              ` : ''}
             </div>`;
   },
   afterRender: async () => {

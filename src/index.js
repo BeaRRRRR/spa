@@ -37,8 +37,8 @@ async function router() {
 
 $(window).on('hashchange', router);
 $(window).on('load', router);
-$(window).on('load', () => {
-  console.log('load event fired');
+$(window).on('hashchange', () => {
+  console.log('hashchaged lol');
 });
 
 // Needed for Hot Module Replacement
