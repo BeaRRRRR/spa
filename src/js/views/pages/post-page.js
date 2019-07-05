@@ -52,8 +52,10 @@ const postPage = {
                 <span id="heartIcon" class="${isLiked ? 'fas' : 'far'} fa-heart fa-2x"></span>
                 <span id="likeCount">${post.liked.length - 1}</span>` : ''}
                 ${authenticatedUser._id == post.authorId ? `
+                <div class="post-buttons">
                 <a id="delete" class="btn btn-outline-danger">Delete</a>
-                <a id="edit" class="btn btn-outline-dark" href="#/new?editId=${post._id}">Edit</a>` : ''}
+                <a id="edit" class="btn btn-outline-dark" href="#/new?editId=${post._id}">Edit</a>
+                </div>` : ''}
               </div>
               <div class="container">
                 <form id="newCommentForm">

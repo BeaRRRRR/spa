@@ -1,15 +1,10 @@
 @import "custom";
 @import "~bootstrap/scss/bootstrap";
-
-.avatar-small {
-  height: 50px;
-  width: 50px;
-}
-
-.profile-pic {
-  width: 12.2vw;
-  height: 12.2vw;
-}
+@import "pages/user-page";
+@import "pages/post-page";
+@import "pages/new-post-page";
+@import "pages/navbar";
+@import "pages/home-page";
 
 .card-header {
   background: #ffffff;
@@ -17,53 +12,6 @@
 
 .card-footer {
   background: #ffffff;
-}
-
-.comment {
-  margin-bottom: 1.5vw;
-}
-
-.post, .post-preview {
-  margin-top: 2vw;
-  border: 1px solid #cecece;
-  background: #ffffff;
-}
-
-.post-title {
-  font-size: 19px;
-  font-weight: 600;
-  border: 0 !important;
-}
-
-.post-content {
-  border: 0 !important;
-}
-
-.post-reading-time {
-  border-top: 0;
-  position: absolute;
-  text-align: left;
-  vertical-align: bottom;
-  right: 20px;
-  bottom: 12px;
-}
-
-.post-likes-count {
-  border-top: 0;
-  position: absolute;
-  text-align: right;
-  vertical-align: bottom;
-  left: 20px;
-  bottom: 12px;
-}
-
-.post-preview {
-  min-height: 10vw;
-}
-
-.pagination {
-  font-weight: 600;
-  margin-top: 2vw;
 }
 
 input[type="text"], textarea {
@@ -82,38 +30,4 @@ h3 {
 h4 {
   font-size: 17px;
   font-weight: 500;
-}
-
-.previous-page, .next-page {
-  min-width: 4.5vw;
-  text-align: center;
-}
-
-.navbar {
-  margin-bottom: 2vw;
-}
-
-.userpage {
-  border: 2px solid #0b4442;
-  box-shadow: 5px 6px 0px #0b4442
-}
-
-.user-profile-header {
-  border: 0;
-  padding-left: 0;
-}
-
-.settings-button {
-  color: #FFFFFF;
-  background-color: #0D4D4B;
-
-}
-
-.post-buttons {
-  float: right;
-  margin-top: 5px;
-}
-
-.userpage-buttons {
-  float: right;
 }

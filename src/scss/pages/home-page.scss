@@ -1,0 +1,38 @@
+.post-preview {
+  margin-top: 2vw;
+  min-height: 10vw;
+  border: 1px solid #cecece;
+  background: #ffffff;
+}
+.post-reading-time {
+  border-top: 0;
+  position: absolute;
+  text-align: left;
+  vertical-align: bottom;
+  right: 20px;
+  bottom: 12px;
+}
+
+.post-likes-count {
+  border-top: 0;
+  position: absolute;
+  text-align: right;
+  vertical-align: bottom;
+  left: 20px;
+  bottom: 12px;
+}
+
+.pagination {
+  font-weight: 600;
+  margin-top: 2vw;
+}
+
+.previous-page, .next-page {
+  min-width: 4.5vw;
+  text-align: center;
+}
+
+.avatar-small {
+  height: 50px;
+  width: 50px;
+}

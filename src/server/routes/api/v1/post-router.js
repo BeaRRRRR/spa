@@ -15,13 +15,15 @@ postRouter.route('/')
       .catch(err => console.log(err));
   })
   .post(async (req, res) => {
-    if (!req.body.authorId || !req.body.title || !req.body.content || !req.body.date || !req.body.readTime) {
+    if (!req.user) {
+      res.sendStatus(401);
+    } else if (!req.body.authorId || !req.body.title || !req.body.content || !req.body.date || !req.body.readTime) {
       res.status(400).send('Please specify post title,post author and post content');
     } else {
       // Creating a post
       const newPost = Object.assign(req.body, { liked: [''] });
       postRepository.save(newPost)
-        .then(post => res.status(201).json(post))
+        .then(post => res.json(post))
         .catch(err => res.status(500).send({ error: err }));
     }
   });
@@ -31,18 +33,18 @@ postRouter.route('/count')
     // Count all the posts available (for pagination)
     postRepository.count()
       .then(data => res.send(data.toString()))
-      .catch(err => res.send(500, { error: err }));
+      .catch(err => res.status(500).send({ error: err }));
   });
 postRouter.route('/:postId')
   .get((req, res) => {
     // Getting the post by id
     postRepository.getById(req.params.postId)
       .then(data => res.json(data))
-      .catch(err => res.send(500, { error: err }));
+      .catch(err => res.status(500).send({ error: err }));
   })
   .put((req, res) => {
     // Only the authorized author of the post can change its content
-    if (req.user._id != req.body.authorId) {
+    if (!req.user || req.user._id.equals(req.body.authorId)) {
       res.sendStatus(401);
     }
     console.log('Put request');
@@ -59,12 +61,12 @@ postRouter.route('/:postId')
     console.log(doc);
     postRepository.update(filter, doc)
       .then(data => res.json(data))
-      .catch(err => res.send(500, { error: err }));
+      .catch(err => res.status(500).send({ error: err }));
   })
   .delete(async (req, res) => {
     const { authorId } = await postRepository.getById(req.params.postId);
     // Users can only delete their posts
-    if (!req.user._id.equals(authorId)) {
+    if (!req.user || !req.user._id.equals(authorId)) {
       res.sendStatus(401);
     } else {
       console.log('user is authed');
