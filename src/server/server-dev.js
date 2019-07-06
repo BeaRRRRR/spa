@@ -17,8 +17,10 @@ import getAutheticatedUserRouter from './routes/util/get-authenticated-user-rout
 import authentication from './routes/auth/authentication';
 import './config/passport-config';
 
-const db = mongoose.connect('mongodb://localhost/spa-db', { useNewUrlParser: true });
+// Use this example to connect to the database that is installed locally
+// const db = mongoose.connect('mongodb://localhost/spa-db', { useNewUrlParser: true });
 
+const db = mongoose.connect('mongodb+srv://BeaRRRRR:root@cluster0-gq7hv.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true });
 
 const app = express();
 
@@ -68,7 +70,9 @@ app.use('/api/v1/comments', commentRouter);
 
 const PORT = process.env.PORT || 8080;
 
-app.listen(PORT, () => {
-  console.log(`App listening to ${PORT}....`);
-  console.log('Press Ctrl+C to quit.');
+db.then(() => {
+  app.listen(PORT, () => {
+    console.log(`App listening to ${PORT}....`);
+    console.log('Press Ctrl+C to quit.');
+  });
 });

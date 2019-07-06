@@ -22,6 +22,8 @@ const postPage = {
     post = _post;
     authenticatedUser = _authenticatedUser;
     const isLiked = post.liked.includes(authenticatedUser._id);
+    let viberShareHtml = `<a href="viber://forward?text=${encodeURIComponent(post.title + ' ' + window.location.href)}">Share with viber<a/>`;
+    console.log(viberShareHtml);
     // Generating html with all the comments inside
     let commentsHtml = await Promise.all(comments.map(async (comment) => {
       const author = await userRepository.getById(comment.authorId);
@@ -47,6 +49,9 @@ const postPage = {
                  </div>
                 </div>
               </div>
+              <div class="share-buttons">
+              ${viberShareHtml}
+             </div>
               <div>
                 ${authenticatedUser ? `
                 <span id="heartIcon" class="${isLiked ? 'fas' : 'far'} fa-heart fa-2x"></span>
